@@ -22,9 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class UsersController implements Initializable {
@@ -44,69 +42,58 @@ public class UsersController implements Initializable {
     TableColumn<User, String> tableColumnFirstName;
     @FXML
     TableColumn<User, String> tableColumnLastName;
-//    @FXML
-//    HBox hBox;
-//    @FXML
-//    AnchorPane hBoxParent;
-//    @FXML
-//    SplitPane splitPane;
 
+    /**
+     * Initialize override of users-view scene
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tableColumnFirstName.prefWidthProperty().bind(tableView.widthProperty().divide(2));
         tableColumnLastName.prefWidthProperty().bind(tableView.widthProperty().divide(2));
-        tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<User, String>("firstName"));
-        tableColumnLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
+        tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
         initModel();
 
         tableView.setItems(model);
     }
 
-//    public void setService(UserService service) {
-//        this.service = service;
-//        initModel();
-//    }
-
+    /**
+     * Model initializer
+     */
     private void initModel() {
         Iterable<Friendship> messages = friendshipService.getAll();
         List<Friendship> friendships = StreamSupport.stream(messages.spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
         List<User> friends = new ArrayList<>();
 
         User activeUser = ActiveUser.getInstance().getUser();
 
         for (Friendship f : friendships) {
 
-            Iterable<User> message1 = userService.getAll();
-            List<User> users = StreamSupport.stream(message1.spliterator(), false)
-                    .collect(Collectors.toList());
-
             if (f.getFirstUserId() == activeUser.getId() && f.getStatus().equals("accepted") ) {
-//                for (User u : users) {
-//                    if (u.getId() == f.getSecondUserId()) {
-//                        friends.add(u);
-//                        break;
-//                    }
-//                }
                 Optional<User> optionalUser = userService.findById(f.getSecondUserId());
-                friends.add(optionalUser.get());
+                optionalUser.ifPresent(friends::add);
             }
             else if (f.getSecondUserId() == activeUser.getId() && f.getStatus().equals("accepted") ) {
-//                for (User u : users) {
-//                    if (u.getId() == f.getFirstUserId()) {
-//                        friends.add(u);
-//                        break;
-//                    }
-//                }
                 Optional<User> optionalUser = userService.findById(f.getFirstUserId());
-                friends.add(optionalUser.get());
+                optionalUser.ifPresent(friends::add);
             }
         }
-//        friends = ActiveUser.getInstance().getUser().getFriends();
         model.setAll(friends);
     }
 
+    /**
+     * Friend request button clicked
+     * @param event event
+     */
     public void friendRequestClicked(ActionEvent event) {
         try {
             User user = new User(firstNameInputAddFr.getText(), lastNameInputAddFr.getText());
@@ -121,6 +108,10 @@ public class UsersController implements Initializable {
         MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Info", "Friend request succesffully sent!");
     }
 
+    /**
+     * Delete button clicked
+     * @param event event
+     */
     public void deleteClicked(ActionEvent event) {
         try {
             ObservableList<User> selectedUser = tableView.getSelectionModel().getSelectedItems();
@@ -144,6 +135,10 @@ public class UsersController implements Initializable {
         MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "Delete", "Friend successfully removed!");
     }
 
+    /**
+     * Pending request button clicked
+     * @param event event
+     */
     public void pendingRequestsClicked(ActionEvent event) {
         try {
 
@@ -151,10 +146,6 @@ public class UsersController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(UsersController.class.getResource("requests-view.fxml"));
             AnchorPane usersLayout = fxmlLoader.load();
             Scene scene = new Scene(usersLayout);
-
-//            UsersController usersController = fxmlLoader.getController();
-//            usersController.setService(service);
-//            usersController.initModel();
 
             window.setOnCloseRequest(e -> initModel());
 

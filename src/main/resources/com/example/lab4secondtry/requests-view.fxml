@@ -15,11 +15,11 @@
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TableView fx:id="tableView" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="tableView" minHeight="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="568.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columns>
                         <TableColumn fx:id="tableColumnFirstName" minWidth="150.0" prefWidth="274.0" text="First name" />
                         <TableColumn fx:id="tableColumnLastName" minWidth="20.0" prefWidth="273.0" text="Last name" />
-                        <TableColumn fx:id="tableColumnDate" prefWidth="150.0" text="Request date" />
+                        <TableColumn fx:id="tableColumnDate" prefWidth="129.0" text="Request date" />
                      </columns>
                   </TableView>
                </children>

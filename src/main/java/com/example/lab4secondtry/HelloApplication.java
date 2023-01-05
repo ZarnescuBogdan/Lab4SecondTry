@@ -4,19 +4,23 @@ import com.example.lab4secondtry.Repository.DbRepo.ActiveRepoFriendship;
 import com.example.lab4secondtry.Repository.DbRepo.ActiveRepoUser;
 import com.example.lab4secondtry.Repository.DbRepo.FriendshipDbRepository;
 import com.example.lab4secondtry.Repository.DbRepo.UserDbRepository;
-import com.example.lab4secondtry.Service.UserService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-//    UserService userService = new UserService();
-
+    /**
+     * Start application
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws IOException error
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
 
@@ -33,13 +37,8 @@ public class HelloApplication extends Application {
         ActiveRepoUser.getInstance().setRepository(userRepo);
         ActiveRepoFriendship.getInstance().setRepository(friendshipRepo);
 
-//        service = new UserService(userRepo);
-//        service = new UserService();
-
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        HelloController helloController = fxmlLoader.getController();
-//        helloController.setUserService(service);
 
         primaryStage.setMinWidth(276);
         primaryStage.setMinHeight(135);
@@ -48,6 +47,10 @@ public class HelloApplication extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Main
+     * @param args args
+     */
     public static void main(String[] args) {
         launch();
     }

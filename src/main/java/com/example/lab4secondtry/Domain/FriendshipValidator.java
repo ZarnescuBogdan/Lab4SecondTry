@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendshipValidator implements Validator<Friendship> {
+    /**
+     * Validate Friendship entity
+     * @param entity - entity to be validated
+     * @throws ValidationException if Friendship is not valid
+     */
     @Override
     public void validate(Friendship entity) throws ValidationException {
         List<String> possible = new ArrayList<>();

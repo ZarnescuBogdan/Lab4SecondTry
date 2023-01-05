@@ -2,12 +2,13 @@ package com.example.lab4secondtry.Service.config;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 public class Config {
 
-    public static String CONFIG_LOCATION=Config.class.getClassLoader()
-            .getResource("config.properties").getFile();
+    public static String CONFIG_LOCATION= Objects.requireNonNull(Config.class.getClassLoader()
+            .getResource("config.properties")).getFile();
     public static Properties getProperties() {
         Properties properties=new Properties();
         try {

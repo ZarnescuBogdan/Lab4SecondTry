@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class HelloController {
     UserService userService = new UserService();
@@ -31,10 +30,10 @@ public class HelloController {
     @FXML
     TextField lastNameInput;
 
-//    public void setUserService(UserService service) {
-//        this.service = service;
-//    }
-
+    /**
+     * Log In button clicked
+     * @param actionEvent event
+     */
     @FXML
     void handleLoginClicked(ActionEvent actionEvent) {
         try {
@@ -49,15 +48,9 @@ public class HelloController {
             AnchorPane usersLayout = fxmlLoader.load();
             Scene scene = new Scene(usersLayout);
 
-//            UsersController usersController = fxmlLoader.getController();
-//            usersController.setService(service);
-//            usersController.initModel();
-
-
-
             //Block events to other windows
             window.initModality(Modality.APPLICATION_MODAL);
-            window.setTitle("Users");
+            window.setTitle("Friends");
             window.setMinWidth(680);
             window.setMinHeight(450);
 
@@ -72,6 +65,10 @@ public class HelloController {
         }
     }
 
+    /**
+     * Show existing users button clicked
+     * @param event event
+     */
     @FXML
     void showExistingUsersClicked(ActionEvent event) {
         try {
@@ -79,10 +76,6 @@ public class HelloController {
             FXMLLoader fxmlLoader = new FXMLLoader(UsersController.class.getResource("allUsers-view.fxml"));
             AnchorPane allUsersLayout = fxmlLoader.load();
             Scene scene = new Scene(allUsersLayout);
-
-//            AllUsersController allUsersController = fxmlLoader.getController();
-//            allUsersController.setAllUserService(service);
-//            allUsersController.initModel();
 
             //Block events to other windows
             window.initModality(Modality.APPLICATION_MODAL);
@@ -98,13 +91,21 @@ public class HelloController {
         }
     }
 
+    /**
+     * Sign Up button clicked
+     * @param event event
+     */
     @FXML
     void signupClicked(ActionEvent event) {
         try {
             User user = new User(firstNameInput.getText(), lastNameInput.getText());
             userService.add(user);
 
-            ActiveUser.getInstance().setUser(user);
+
+            User userInRepo = userService.find(user);
+
+            ActiveUser.getInstance().setUser(userInRepo);
+            friendshipService.getAllFriendsUser();
 
             Stage window = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(UsersController.class.getResource("users-view.fxml"));

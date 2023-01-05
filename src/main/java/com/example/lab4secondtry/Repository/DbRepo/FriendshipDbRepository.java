@@ -4,22 +4,32 @@ import com.example.lab4secondtry.Domain.Friendship;
 import com.example.lab4secondtry.Repository.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class FriendshipDbRepository implements Repository<Friendship> {
-    private String url;
-    private String username;
-    private String password;
+    private final String url;
+    private final String username;
+    private final String password;
 
+    /**
+     * Constructor with parameters
+     * @param url url of database
+     * @param username username of database
+     * @param password password of database
+     */
     public FriendshipDbRepository(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Get Friendship by id
+     * @param id id of entity
+     * @return Optional of found Friendship
+     */
     @Override
     public Optional<Friendship> findOne(long id) {
         String sql = "SELECT * FROM friendships WHERE id_friendship = ?";
@@ -39,23 +49,16 @@ public class FriendshipDbRepository implements Repository<Friendship> {
                 return Optional.of(friendship);
             }
 
-//            while (resultSet.next()) {
-//                long idFriendship = resultSet.getLong("id_friendship");
-//                if (idFriendship == id) {
-//                    long idUser1 = resultSet.getLong("id_user1");
-//                    long idUser2 = resultSet.getLong("id_user2");
-//                    String status = resultSet.getString("status");
-//                    Friendship friendship = new Friendship(idUser1, idUser2, status);
-//                    return Optional.of(friendship);
-//                }
-//            }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return Optional.empty();
     }
 
+    /**
+     * Get all Friendships
+     * @return Iterable of all Friendship
+     */
     @Override
     public Iterable<Friendship> findAll() {
         Set<Friendship> friendships = new HashSet<>();
@@ -83,8 +86,12 @@ public class FriendshipDbRepository implements Repository<Friendship> {
         return friendships;
     }
 
+    /**
+     * Add Friendship
+     * @param entity entity to be added
+     */
     @Override
-    public Optional<Friendship> save(Friendship entity) {
+    public void save(Friendship entity) {
         String sql = "INSERT INTO friendships (id_user1, id_user2, status, date) values (?, ?, ?, ?)";
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
@@ -98,18 +105,23 @@ public class FriendshipDbRepository implements Repository<Friendship> {
             connection.close();
 
         } catch (SQLException e) {
-            return Optional.ofNullable(entity);
+            e.printStackTrace();
         }
-        return Optional.empty();
     }
 
+    /**
+     * Delete Friendship
+     * @param id id of entity
+     * @return Optional of deleted Friendship
+     */
     @Override
     public Optional<Friendship> delete(long id) {
         String sql = "DELETE FROM friendships WHERE id_friendship = ?";
         Friendship friendship = null;
         try {
             Optional<Friendship> opFriendship = ActiveRepoFriendship.getInstance().getRepository().findOne(id);
-            friendship = opFriendship.get();
+            if (opFriendship.isPresent())
+                friendship = opFriendship.get();
 
             Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -124,8 +136,12 @@ public class FriendshipDbRepository implements Repository<Friendship> {
         return Optional.empty();
     }
 
+    /**
+     * Update Friendship
+     * @param entity entity to be updated
+     */
     @Override
-    public Optional<Friendship> update(Friendship entity) {
+    public void update(Friendship entity) {
         String sql1 = "UPDATE friendships SET id_user1 = ? WHERE id_friendship = ?";
         String sql2 = "UPDATE friendships SET id_user2 = ? WHERE id_friendship = ?";
         String sql3 = "UPDATE friendships SET status = ? WHERE id_friendship = ?";
@@ -157,6 +173,5 @@ public class FriendshipDbRepository implements Repository<Friendship> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
     }
 }

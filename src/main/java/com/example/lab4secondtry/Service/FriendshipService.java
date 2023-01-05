@@ -3,12 +3,9 @@ package com.example.lab4secondtry.Service;
 import com.example.lab4secondtry.Domain.*;
 import com.example.lab4secondtry.Repository.DbRepo.ActiveRepoFriendship;
 import com.example.lab4secondtry.Repository.DbRepo.ActiveRepoUser;
-import com.example.lab4secondtry.Repository.DbRepo.UserDbRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Spliterator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

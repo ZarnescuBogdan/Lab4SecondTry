@@ -14,13 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class UserService implements Service<User> {
-//    private UserDbRepository repo;
     private UserValidator validator;
-
-//    public UserService(UserDbRepository repo) {
-//        this.repo = repo;
-//        this.validator = new UserValidator();
-//    }
 
     public UserService() {
         this.validator = new UserValidator();
@@ -30,7 +24,6 @@ public class UserService implements Service<User> {
     public User find(User user) {
         validator.validate(user);
 
-//        for (User u : repo.findAll()) {
         for (User u : ActiveRepoUser.getInstance().getRepository().findAll()) {
             if (user.equals(u))
                 return u;
@@ -46,25 +39,21 @@ public class UserService implements Service<User> {
     public void add(User entity) {
         validator.validate(entity);
 
-//        for (User u : repo.findAll()) {
         for (User u : ActiveRepoUser.getInstance().getRepository().findAll()) {
             if (entity.equals(u))
                 throw new ValidationException("This user already exists!");
         }
 
-//        repo.save(entity);
         ActiveRepoUser.getInstance().getRepository().save(entity);
     }
 
     @Override
     public void delete(long id) {
-//        repo.delete(id);
         ActiveRepoUser.getInstance().getRepository().delete(id);
     }
 
     @Override
     public Iterable<User> getAll() {
-//        return repo.findAll();
         return ActiveRepoUser.getInstance().getRepository().findAll();
     }
 
@@ -86,9 +75,5 @@ public class UserService implements Service<User> {
 
         Friendship friendship = new Friendship(user1.getId(), user2.getId(), "unaccepted", new Date(System.currentTimeMillis()));
         ActiveRepoFriendship.getInstance().getRepository().save(friendship);
-    }
-
-    public void deleteFriend(User user1, User user2) {
-
     }
 }

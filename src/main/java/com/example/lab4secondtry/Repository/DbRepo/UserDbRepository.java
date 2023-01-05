@@ -1,7 +1,6 @@
 package com.example.lab4secondtry.Repository.DbRepo;
 
 import com.example.lab4secondtry.Domain.User;
-import com.example.lab4secondtry.Domain.Validator;
 import com.example.lab4secondtry.Repository.Repository;
 
 import java.sql.*;
@@ -10,16 +9,27 @@ import java.util.Optional;
 import java.util.Set;
 
 public class UserDbRepository implements Repository<User> {
-    private String url;
-    private String username;
-    private String password;
+    private final String url;
+    private final String username;
+    private final String password;
 
+    /**
+     * Constructor with parameters
+     * @param url url of database
+     * @param username username of database
+     * @param password password of database
+     */
     public UserDbRepository(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Get User by id
+     * @param id id of entity
+     * @return Optional of found User
+     */
     @Override
     public Optional<User> findOne(long id) {
         try {
@@ -42,6 +52,10 @@ public class UserDbRepository implements Repository<User> {
         return Optional.empty();
     }
 
+    /**
+     * Get all Users
+     * @return Iterable of all Users
+     */
     @Override
     public Iterable<User> findAll() {
         Set<User> users = new HashSet<>();
@@ -66,8 +80,12 @@ public class UserDbRepository implements Repository<User> {
         return users;
     }
 
+    /**
+     * Add User
+     * @param entity entity to be added
+     */
     @Override
-    public Optional<User> save(User entity) {
+    public void save(User entity) {
         String sql = "insert into users (first_name, last_name) values (?, ?)";
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
@@ -79,11 +97,15 @@ public class UserDbRepository implements Repository<User> {
             ps.executeUpdate();
             connection.close();
         } catch (SQLException e) {
-            return Optional.ofNullable(entity);
+            e.printStackTrace();
         }
-        return Optional.empty();
     }
 
+    /**
+     * Delete User
+     * @param id id of entity
+     * @return Optional of deleted User
+     */
     @Override
     public Optional<User> delete(long id) {
         String sql = "DELETE FROM users WHERE id_user = ?";
@@ -100,8 +122,12 @@ public class UserDbRepository implements Repository<User> {
         return Optional.empty();
     }
 
+    /**
+     * Update User
+     * @param entity entity to be updated
+     */
     @Override
-    public Optional<User> update(User entity) {
+    public void update(User entity) {
         String sql = "UPDATE users SET first_name = ? WHERE id_user = ?\n" +
                 "UPDATE users SET last_name = ? WHERE id_user = ?";
         try {
@@ -118,6 +144,5 @@ public class UserDbRepository implements Repository<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
     }
 }

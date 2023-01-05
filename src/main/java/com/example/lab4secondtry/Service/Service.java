@@ -1,6 +1,5 @@
 package com.example.lab4secondtry.Service;
 
-import com.example.lab4secondtry.Domain.User;
 
 public interface Service<E> {
 

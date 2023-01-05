@@ -27,6 +27,16 @@ public class AllUsersController implements Initializable {
     @FXML
     TableColumn<User, String> tableColumnLastName;
 
+    /**
+     * Initialize override of allUsers-view
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tableColumnFirstName.prefWidthProperty().bind(tableView.widthProperty().divide(2));
@@ -39,11 +49,9 @@ public class AllUsersController implements Initializable {
         tableView.setItems(model);
     }
 
-//    public void setAllUserService(UserService service) {
-//        this.service = service;
-//        initModel();
-//    }
-
+    /**
+     * Model initializer
+     */
     private void initModel() {
         Iterable<User> messages = userService.getAll();
         List<User> users = StreamSupport.stream(messages.spliterator(), false)
